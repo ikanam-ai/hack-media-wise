@@ -22,7 +22,6 @@ catboost = "^1.2.5"
 scikit-learn = "^1.5.1"
 numpy = "^1.26.4"
 
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
