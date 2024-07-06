@@ -3,6 +3,7 @@ import streamlit as st
 from custom_setup import setup
 from form import form
 from map_ import map_
+from model import load_model
 from utils import load_data
 
 setup()
@@ -16,4 +17,4 @@ with col1.container():
 with col2.container():
     data = form()
     if data:
-        st.json(data)
+        st.write("Результат:", load_model())

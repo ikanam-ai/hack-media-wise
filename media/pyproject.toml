@@ -18,6 +18,9 @@ streamlit-javascript = "^0.1.5"
 geopandas = "^1.0.1"
 h3 = "^3.7.7"
 shapely = "^2.0.4"
+catboost = "^1.2.5"
+scikit-learn = "^1.5.1"
+numpy = "^1.26.4"
 
 
 [build-system]
