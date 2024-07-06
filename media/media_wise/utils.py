@@ -4,6 +4,8 @@ import streamlit as st
 from enum import Enum
 import geopandas as gpd
 
+
+@st.cache_resource
 def load_data():
     with open("raw_data/train_data.json", "r", encoding="utf-8") as f:
         data = f.read()

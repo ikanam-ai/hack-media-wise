@@ -4,7 +4,7 @@ from streamlit_folium import st_folium
 from utils import gender_convert, get_geo_data, style_function, GeoFile
 
 
-@st.cache_data
+@st.cache_resource
 def add_districts():
     return folium.GeoJson(
         get_geo_data(GeoFile.moscow_districts),
@@ -21,7 +21,7 @@ def add_districts():
     )
 
 
-@st.cache_data
+@st.cache_resource
 def add_ao():
     return folium.GeoJson(
         get_geo_data(GeoFile.moscow_ao),
@@ -60,9 +60,13 @@ def add_points(js, f_map):
 def map_(js):
     moscow_location = [55.751244, 37.618423]
     f_map = folium.Map(location=moscow_location, zoom_start=10, attributionControl=False)
-    for area, hexagons in [add_ao(), add_districts()]:
+    if st.session_state.get('hexagons') is None:
+        st.session_state['hexagons'] = [add_ao(), add_districts()]
+
+    for area, hexagons in st.session_state["hexagons"]:
         area.add_to(f_map)
         hexagons.add_to(f_map)
-    add_points(js, f_map)
+
+    # add_points(js, f_map)
 
     return st_folium(f_map, use_container_width=True, key="new")
