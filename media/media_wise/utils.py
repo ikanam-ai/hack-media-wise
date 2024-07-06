@@ -22,12 +22,17 @@ def gender_convert(name: str) -> str:
 
 class GeoFile(Enum):
     moscow_districts = "moscow_districts"
+    moscow_districts_hex = "moscow_districts_hex"
     moscow_ao = "moscow_ao"
+    moscow_ao_hex = "moscow_ao_hex"
     moscow_pois = "moscow_pois"
 
 
-def get_geo_data(filename: GeoFile = GeoFile.moscow_ao) -> gpd.GeoDataFrame:
+def get_geo_data(filename: GeoFile = GeoFile.moscow_ao, type: str = "gpd") -> gpd.GeoDataFrame:
     url = f'raw_data/{filename.name}.geojson'
+
+    if type == "json":
+        return json.load(open(url, "r", encoding="utf-8"))
 
     return gpd.read_file(url)
 
@@ -47,3 +52,8 @@ def style_function(feature):
         'weight': 1.5,
         'fillOpacity': 0.6,
     }
+
+
+def merge_hex_geo():
+    ao = get_geo_data(GeoFile.moscow_ao_hex)
+    dist = get_geo_data(GeoFile.moscow_districts_hex)
