@@ -2,7 +2,7 @@
 name = "media-wise"
 version = "0.1.0"
 description = ""
-authors = ["Sergey Dorokhov <seregapax@gmail.com>"]
+authors = ["Ikanam_starichki <ikanam_lab@mail.ru>"]
 readme = "README.md"
 
 [tool.poetry.scripts]
