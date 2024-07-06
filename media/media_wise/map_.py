@@ -1,0 +1,55 @@
+import folium
+import streamlit as st
+from streamlit_folium import st_folium
+from utils import gender_convert, get_geo_data, style_function, GeoFile
+
+
+def add_districts(f_map):
+    geojson = folium.GeoJson(
+        get_geo_data(GeoFile.moscow_districts),
+        style_function=style_function,
+        tooltip=folium.GeoJsonTooltip(fields=['name']),
+        name="Районы",
+        show=False
+    )
+    geojson.add_to(f_map)
+
+
+def add_ao(f_map):
+    geojson = folium.GeoJson(
+        get_geo_data(GeoFile.moscow_ao),
+        style_function=style_function,
+        tooltip=folium.GeoJsonTooltip(fields=['name']),
+        name="Автономные округа",
+        show=True
+    )
+    geojson.add_to(f_map)
+
+
+def add_points(js, f_map):
+    for line in js[0:2]:
+        fg = folium.FeatureGroup(name=line['hash'])
+        for point in line['points']:
+            name = f"""<div style="width: max-content">
+            Название: {line['targetAudience']['name'].replace(' ', ' ')};</br>
+            Возраст: {line['targetAudience']['ageFrom']}-{line['targetAudience']['ageTo']};</br>
+            Пол: {gender_convert(line['targetAudience']['gender'])};</br>
+            Доход: {line['targetAudience']['income']};</br>
+            Value: {line['value']}
+            </div>
+            """
+            m = folium.Marker(location=[point['lat'], point['lon']], popup=name,)
+            m.add_to(fg)
+        fg.add_to(f_map)
+
+    folium.LayerControl().add_to(f_map)
+
+
+def map_(js):
+    moscow_location = [55.751244, 37.618423]
+    f_map = folium.Map(location=moscow_location, zoom_start=10, attributionControl=False)
+    add_ao(f_map)
+    add_districts(f_map)
+    add_points(js, f_map)
+
+    return st_folium(f_map, use_container_width=True, key="new")
