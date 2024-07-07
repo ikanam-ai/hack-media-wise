@@ -1,10 +1,9 @@
-import json
-
 import streamlit as st
 from utils import gender_convert
 
 
-def form():
+def form() -> None | dict:
+    """ Форма ввода параметров для подбора точек"""
     with st.form(key='form', border=False):
         f, t = st.columns(2)
         age_from = f.number_input("Возраст от", min_value=1, max_value=100, step=1)

@@ -5,7 +5,8 @@ import pandas as pd
 import geopandas as gpd
 
 
-def calculate_points(data: gpd.GeoDataFrame):
+def calculate_all_points(data: gpd.GeoDataFrame) -> dict[str, list]:
+    """ Расчет всех точек для карты, для быстрого доступа к ним"""
     data['points'] = data['points'].apply(json.loads)
     points = {}
     for i, row in data.iterrows():
@@ -20,10 +21,11 @@ def calculate_points(data: gpd.GeoDataFrame):
     return points
 
 
-geo_points: dict[str, list] = calculate_points(get_geo_data(GeoFile.moscow_ao_hex_val))
+geo_points: dict[str, list] = calculate_all_points(get_geo_data(GeoFile.moscow_ao_hex_val))
 
 
-def balance_points(points_count: int, df: pd.DataFrame):
+def balance_points(points_count: int, df: pd.DataFrame) -> pd.DataFrame:
+    """ Балансировка точек для карты, если их количество не совпадает с заданным"""
     df = df.copy()
     val_sum = df['val'].sum()
     df.loc[:, 'points_count'] = np.round((df['val'] / val_sum) * points_count).astype(int)
@@ -42,7 +44,8 @@ def balance_points(points_count: int, df: pd.DataFrame):
     return df
 
 
-def pick_points(frame: pd.DataFrame):
+def pick_points(frame: pd.DataFrame) -> list[object]:
+    """ Выбор точек для карты"""
     points = []
     for i, row in frame.iterrows():
         points_count = row['points_count']
@@ -53,6 +56,7 @@ def pick_points(frame: pd.DataFrame):
 
 
 def calculate(points_count: int) -> list[object]:
+    """ Расчет точек для карты"""
     filter_d = {"ЗАО", "ТАО", "НАО", "ЗелАО", "ТАО", "НАО"}
     df = load_ao_hex()
     mask = ~df['ref'].isin(filter_d)

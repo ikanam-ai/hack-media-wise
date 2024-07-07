@@ -8,12 +8,14 @@ import pandas as pd
 
 @st.cache_resource
 def load_data():
+    """ Загрузка данных тренировки из файла """
     with open("raw_data/train_data.json", "r", encoding="utf-8") as f:
         data = f.read()
         return json.loads(data)
 
 
 def gender_convert(name: str) -> str:
+    """ Конвертация русского названия пола в английское и наоборот """
     genders_r = {"мужской": "male", "женский": "female", "любой": "all"}
     genders_e = {v: k for k, v in genders_r.items()}
 
@@ -25,10 +27,12 @@ def gender_convert(name: str) -> str:
 
 @st.cache_resource
 def load_ao_hex() -> pd.DataFrame:
+    """ Загрузка данных по районам c hex-ячейками """
     return pd.read_csv("raw_data/df_res_eval_ao.csv")
 
 
 class GeoFile(Enum):
+    """ Файлы с геоданными"""
     moscow_districts = "moscow_districts"
     moscow_districts_hex = "moscow_districts_hex"
     moscow_ao = "moscow_ao"
@@ -37,16 +41,16 @@ class GeoFile(Enum):
     moscow_ao_hex_val = "moscow_ao_hex_val"
 
 
-def get_geo_data(filename: GeoFile = GeoFile.moscow_ao, type: str = "gpd") -> gpd.GeoDataFrame:
+@st.cache_resource
+def get_geo_data(filename: GeoFile = GeoFile.moscow_ao) -> gpd.GeoDataFrame:
+    """ Загрузка геоданных из файла """
     url = f'raw_data/{filename.name}.geojson'
-
-    if type == "json":
-        return json.load(open(url, "r", encoding="utf-8"))
 
     return gpd.read_file(url)
 
 
-def style_function(feature):
+def style_function(feature: dict) -> dict:
+    """ Стилизация геоданных"""
     name = feature['properties']['name']
     if st.session_state.get('colors') is None:
         st.session_state['colors'] = {}
@@ -61,8 +65,3 @@ def style_function(feature):
         'weight': 1.5,
         'fillOpacity': 0.6,
     }
-
-
-def merge_hex_geo():
-    ao = get_geo_data(GeoFile.moscow_ao_hex)
-    dist = get_geo_data(GeoFile.moscow_districts_hex)

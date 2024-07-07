@@ -3,6 +3,7 @@ import geopandas as gpd
 
 
 def add_hexagons_to_map(m, hexagons_polygons: gpd.GeoDataFrame):
+    """Добавление hexagon grid на карту"""
     for _, row in hexagons_polygons.iterrows():
         geojson = gpd.GeoSeries([row['geometry']]).__geo_interface__
         folium.GeoJson(geojson, style_function=lambda feature, col="blue": {

@@ -2,6 +2,7 @@ import streamlit as st
 
 
 def setup() -> None:
+    """ Настройка Streamlit приложения """
     st.set_page_config(layout="wide", )
     st.markdown(f"""
         <style>

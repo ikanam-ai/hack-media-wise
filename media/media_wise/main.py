@@ -17,6 +17,5 @@ with col2:
     if form_data:
         st.session_state['points_count'] = calculate(form_data['points_count'])
 
-
 with col1:
     st_data = map_(st.session_state['points_count'])
