@@ -56,8 +56,8 @@ def map_(js: list[object]):
     if st.session_state.get('hexagons') is None:
         st.session_state['hexagons'] = [add_ao(), add_districts()]
 
-    for area in st.session_state["hexagons"]:
-        area.add_to(f_map)
+    # for area in st.session_state["hexagons"]:
+    #     area.add_to(f_map)
 
     add_points(js, f_map)
 
