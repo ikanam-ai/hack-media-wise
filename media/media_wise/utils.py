@@ -3,6 +3,7 @@ import random
 import streamlit as st
 from enum import Enum
 import geopandas as gpd
+import pandas as pd
 
 
 @st.cache_resource
@@ -22,12 +23,18 @@ def gender_convert(name: str) -> str:
     return found_name.capitalize() if found_name in genders_r else found_name
 
 
+@st.cache_resource
+def load_ao_hex() -> pd.DataFrame:
+    return pd.read_csv("raw_data/df_res_eval_ao.csv")
+
+
 class GeoFile(Enum):
     moscow_districts = "moscow_districts"
     moscow_districts_hex = "moscow_districts_hex"
     moscow_ao = "moscow_ao"
     moscow_ao_hex = "moscow_ao_hex"
     moscow_pois = "moscow_pois"
+    moscow_ao_hex_val = "moscow_ao_hex_val"
 
 
 def get_geo_data(filename: GeoFile = GeoFile.moscow_ao, type: str = "gpd") -> gpd.GeoDataFrame:

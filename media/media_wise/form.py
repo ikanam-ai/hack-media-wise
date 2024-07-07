@@ -16,7 +16,6 @@ def form():
         cols = st.columns(3)
         income_checkboxes = [col.checkbox(name) for col, name in zip(cols, 'abc')]
         income = ''.join([letter for letter, selected in zip('abc', income_checkboxes) if selected])
-        file = st.file_uploader("Загрузить файл", type=["json"])
 
         submit = st.form_submit_button("Рассчитать", use_container_width=True)
 
@@ -27,5 +26,5 @@ def form():
                 "gender": gender_convert(gender),
                 "income": income,
                 "points_count": points_count,
-                "file": json.loads(file.read()) if file else None
+
             }
