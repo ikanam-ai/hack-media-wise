@@ -63,12 +63,18 @@ def pick_points(frame: pd.DataFrame) -> list[object]:
     return points
 
 
-def calculate(points_count: int) -> list[object]:
-    """ Расчет точек для карты"""
+def filter_df(df):
+    """ Фильтрует датафрейм"""
     filter_d = {"ЗАО", "ТАО", "НАО", "ЗелАО", "ТАО", "НАО"}
-    df = load_ao_hex()
     mask = ~df['ref'].isin(filter_d)
     filtered_df = df[mask]
+
+    return filtered_df
+
+
+def calculate(points_count: int) -> list[object]:
+    """ Расчет точек для карты"""
+    filtered_df = filter_df(load_ao_hex())
     balanced = balance_points(points_count, filtered_df)
 
     return pick_points(balanced)
