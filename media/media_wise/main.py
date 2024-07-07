@@ -7,8 +7,7 @@ from form import form
 from map_ import map_
 from calculation import calculate
 from stati import stati
-
-
+from download import download
 
 
 col1, col2 = st.columns([4, 1])
@@ -20,7 +19,9 @@ with col2:
     form_data = form()
     if form_data:
         st.session_state['points_count'] = calculate(form_data['points_count'])
-    stati(st.session_state['points_count'])
+    if len(st.session_state['points_count']) > 0:
+        download(st.session_state['points_count'])
+        stati(st.session_state['points_count'])
 
 with col1:
     st_data = map_(st.session_state['points_count'])

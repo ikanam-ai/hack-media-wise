@@ -12,5 +12,5 @@ def stati(points: list[object]) -> None:
                 coord = point['points'][0]
                 points_text += f"{point['name']}\nШирота: {coord['lat']}\nДолгота: {coord['lon']}\n\n"
 
-        st.text_area("Точки", points_text, disabled=True, height=300)
+        st.text_area("Точки", points_text, disabled=True, height=240)
 
