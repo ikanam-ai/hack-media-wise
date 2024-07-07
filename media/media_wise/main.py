@@ -1,11 +1,14 @@
 import streamlit as st
-
 from custom_setup import setup
+
+setup()
+
+
 from form import form
 from map_ import map_
 from calculation import calculate
 
-setup()
+
 
 col1, col2 = st.columns([4, 1])
 

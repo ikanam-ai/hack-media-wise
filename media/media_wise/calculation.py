@@ -2,6 +2,7 @@ from utils import load_ao_hex, get_geo_data, GeoFile
 import json
 import numpy as np
 import pandas as pd
+import streamlit as st
 import geopandas as gpd
 
 
@@ -21,7 +22,13 @@ def calculate_all_points(data: gpd.GeoDataFrame) -> dict[str, list]:
     return points
 
 
-geo_points: dict[str, list] = calculate_all_points(get_geo_data(GeoFile.moscow_ao_hex_val))
+@st.cache_resource
+def load_geo_points() -> dict[str, list]:
+    """ Загрузка всех точек для карты"""
+    return calculate_all_points(get_geo_data(GeoFile.moscow_ao_hex_val))
+
+
+geo_points: dict[str, list] = load_geo_points()
 
 
 def balance_points(points_count: int, df: pd.DataFrame) -> pd.DataFrame:
@@ -31,12 +38,13 @@ def balance_points(points_count: int, df: pd.DataFrame) -> pd.DataFrame:
     df.loc[:, 'points_count'] = np.round((df['val'] / val_sum) * points_count).astype(int)
     all_points = df['points_count'].sum()
     while all_points > points_count:
-        min_val = df['val'].min()
-        mask = (df['val'] == min_val) & (df['points_count'] >= 1)
+        mask_points_count_non_zero = df['points_count'] != 0
+        min_val = df.loc[mask_points_count_non_zero, 'val'].min()
+        mask = (df['val'] == min_val) & mask_points_count_non_zero
         df.loc[mask, 'points_count'] -= 1
         all_points = df['points_count'].sum()
     while all_points < points_count:
-        max_val = df['val'].min()
+        max_val = df['val'].max()
         mask = df['val'] == max_val
         df.loc[mask, 'points_count'] += 1
         all_points = df['points_count'].sum()
